@@ -136,7 +136,7 @@ const SearchResult: Component<{
 const FindGalaxy: Component = () => {
     const params = useParams()
     const navigate = useNavigate()
-    const [name, setName] = createSignal("Untitled")
+    const [name, setName] = createSignal("未命名")
     const [profile, setProfile] = createSignal<ProfileInfo | null>()
     const [progress, setProgress] =
         createStore<MultiProfileProgress>(defaultProgress())
@@ -189,7 +189,7 @@ const FindGalaxy: Component = () => {
         batch(() => {
             const origName = name()
             changeProfile(null)
-            setName(origName + " - Copy")
+            setName(origName + " - 副本")
             setProgress({ id: "", current: 0 })
         })
     }
@@ -362,7 +362,7 @@ const FindGalaxy: Component = () => {
                 isLoaded={isLoaded()}
                 searching={store.searching}
             />
-            <div class={styles.rules}>Rules</div>
+            <div class={styles.rules}>规则</div>
             <MultiRuleEditor
                 value={progress.multiRules}
                 onChange={(multiRules) => setProgress("multiRules", multiRules)}
@@ -376,7 +376,7 @@ const FindGalaxy: Component = () => {
                             (hasProgress() && !hasCompleted())
                         }
                     >
-                        <div class={styles.progressText}>Progress:</div>
+                        <div class={styles.progressText}>进度：</div>
                         <ProgressBar
                             class={styles.progressBar}
                             current={progress.current - progress.start}
@@ -385,7 +385,7 @@ const FindGalaxy: Component = () => {
                     </Show>
                 </div>
                 <Show when={hasProgress()}>
-                    <Button onClick={() => setExportModal(true)}>Export</Button>
+                    <Button onClick={() => setExportModal(true)}>导出</Button>
                 </Show>
                 <Switch
                     fallback={
@@ -393,15 +393,15 @@ const FindGalaxy: Component = () => {
                             disabled={!isValid()}
                             onClick={onStartSearching}
                         >
-                            {hasProgress() ? "Resume" : "Start"}
+                            {hasProgress() ? "继续" : "开始"}
                         </Button>
                     }
                 >
                     <Match when={store.searching}>
-                        <Button onClick={onStopSearching}>Pause</Button>
+                        <Button onClick={onStopSearching}>暂停</Button>
                     </Match>
                     <Match when={hasCompleted()}>
-                        <span class={styles.completed}>Completed!</span>
+                        <span class={styles.completed}>已完成！</span>
                     </Match>
                 </Switch>
             </div>

@@ -47,11 +47,11 @@ const RuleBlockContent: Component<{
                 {(item, index) => (
                     <>
                         <Show when={index > 0}>
-                            <div class={styles.or}>OR</div>
+                            <div class={styles.or}>或</div>
                         </Show>
                         <div class={styles.row}>
                             <div class={styles.editRow}>
-                                <span>Has </span>
+                                <span>拥有 </span>
                                 <Select
                                     class={styles.selectConditionType}
                                     value={item().condition.type}
@@ -92,7 +92,7 @@ const RuleBlockContent: Component<{
                                     maxLength={2}
                                     error={item().condition.value <= 0}
                                 />
-                                <span> star(s) that satisfy </span>
+                                <span> 个满足条件的恒星 </span>
                                 <Button
                                     kind="outline"
                                     class={styles.buttonRuleset}
@@ -129,7 +129,7 @@ const RuleBlockContent: Component<{
 
             <Show when={!props.disabled}>
                 <Button class={styles.addOr} kind="outline" onClick={onAdd}>
-                    Add OR rule
+                    添加 或 规则
                 </Button>
             </Show>
         </>
@@ -177,7 +177,7 @@ const MultiRuleEditor: Component<{
                 {(group, index) => (
                     <>
                         <Show when={index > 0}>
-                            <div class={styles.and}>AND</div>
+                            <div class={styles.and}>且</div>
                         </Show>
                         <div class={styles.block}>
                             <RuleBlockContent
@@ -194,7 +194,7 @@ const MultiRuleEditor: Component<{
             </Index>
             <Show when={!props.disabled}>
                 <Button class={styles.addAnd} kind="outline" onClick={onAdd}>
-                    Add AND rule
+                    添加 且 规则
                 </Button>
             </Show>
             <Show when={editing()}>

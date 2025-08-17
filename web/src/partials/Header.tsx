@@ -10,7 +10,7 @@ const Header: Component = () => {
 
     return (
         <div class={styles.header}>
-            <div class={styles.title}>DSP Seed Finder</div>
+            <div class={styles.title}>戴森球计划种子查找器</div>
             <div
                 class={clsx(
                     styles.buttons,
@@ -18,13 +18,13 @@ const Header: Component = () => {
                 )}
             >
                 <A href="/find-star" class={styles.button}>
-                    Star Finder
+                    恒星查找器
                 </A>
                 <A href="/find-galaxy" class={styles.button}>
-                    Galaxy Finder
+                    星系查找器
                 </A>
                 <A href="/galaxy" class={styles.button}>
-                    Galaxy Viewer
+                    星系查看器
                 </A>
             </div>
             <div class={styles.icons}>

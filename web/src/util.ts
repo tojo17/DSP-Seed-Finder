@@ -90,27 +90,27 @@ export const defaultResourceMultipler = 1
 
 export const veinNames: Record<VeinType, string> = {
     [VeinType.None]: "",
-    [VeinType.Iron]: "Iron Ore",
-    [VeinType.Copper]: "Copper Ore",
-    [VeinType.Silicium]: "Silicon Ore",
-    [VeinType.Titanium]: "Titanium Ore",
-    [VeinType.Stone]: "Stone",
-    [VeinType.Coal]: "Coal",
-    [VeinType.Oil]: "Crude Oil",
-    [VeinType.Fireice]: "Fire Ice",
-    [VeinType.Diamond]: "Kimberlite Ore",
-    [VeinType.Fractal]: "Fractal Silicon",
-    [VeinType.Crysrub]: "Organic Crystal",
-    [VeinType.Grat]: "Grating Crystal",
-    [VeinType.Bamboo]: "Stalagmite Crystal",
-    [VeinType.Mag]: "Unipolar Magnet",
+    [VeinType.Iron]: "铁矿",
+    [VeinType.Copper]: "铜矿",
+    [VeinType.Silicium]: "硅石",
+    [VeinType.Titanium]: "钛石",
+    [VeinType.Stone]: "石矿",
+    [VeinType.Coal]: "煤矿",
+    [VeinType.Oil]: "原油",
+    [VeinType.Fireice]: "可燃冰",
+    [VeinType.Diamond]: "金伯利矿石",
+    [VeinType.Fractal]: "分形硅石",
+    [VeinType.Crysrub]: "有机晶体",
+    [VeinType.Grat]: "光栅石",
+    [VeinType.Bamboo]: "刺笋结晶",
+    [VeinType.Mag]: "单极磁石",
 }
 
 export const gasNames: Record<GasType, string> = {
     [GasType.None]: "",
-    [GasType.Fireice]: "Fire Ice",
-    [GasType.Hydrogen]: "Hydrogen",
-    [GasType.Deuterium]: "Deuterium",
+    [GasType.Fireice]: "可燃冰",
+    [GasType.Hydrogen]: "氢",
+    [GasType.Deuterium]: "重氢",
 }
 
 export const veinOrder: VeinType[] = [
@@ -168,40 +168,40 @@ export function getSearch({
 export const romans = ["I", "II", "III", "IV", "V", "VI"]
 
 export const planetTypes: Record<number, string> = {
-    1: "Mariterra",
-    2: "Gas Giant",
-    3: "Gas Giant",
-    4: "Ice Giant",
-    5: "Ice Giant",
-    6: "Scorchedia",
-    7: "Geloterra",
-    8: "Tropicana",
-    9: "Lava",
-    10: "Glacieon",
-    11: "Desolus",
-    12: "Gobi",
-    13: "Sulfuria",
-    14: "Crimsonis",
-    15: "Prairiea",
-    16: "Aquatica",
-    17: "Halitum",
-    18: "Sakura Ocean",
-    19: "Cyclonius",
-    20: "Maroonfrost",
-    21: "Gas Giant",
-    22: "Savanna",
-    23: "Onyxtopia",
-    24: "Icefrostia",
-    25: "Pandora Swamp",
+    1: "地中海",
+    2: "气态巨行星",
+    3: "气态巨行星",
+    4: "冰巨行星",
+    5: "冰巨行星",
+    6: "焦土",
+    7: "冰原冻土",
+    8: "海洋丛林",
+    9: "熔岩",
+    10: "冰原",
+    11: "贫瘠荒漠",
+    12: "戈壁",
+    13: "火山灰",
+    14: "红石",
+    15: "草原",
+    16: "水世界",
+    17: "盐碱地",
+    18: "樱林海",
+    19: "飓风石林",
+    20: "灰烬冻土",
+    21: "气态巨行星",
+    22: "热带草原",
+    23: "黑石盐滩",
+    24: "极寒冻土",
+    25: "潘多拉沼泽",
 }
 
 export const conditionTypeNames: Record<ConditionType, string> = {
-    [ConditionType.Eq]: "exactly",
-    [ConditionType.Neq]: "not equal to",
-    [ConditionType.Gt]: "greater than",
-    [ConditionType.Gte]: "at least",
-    [ConditionType.Lt]: "less than",
-    [ConditionType.Lte]: "at most",
+    [ConditionType.Eq]: "恰好",
+    [ConditionType.Neq]: "不等于",
+    [ConditionType.Gt]: "大于",
+    [ConditionType.Gte]: "至少",
+    [ConditionType.Lt]: "小于",
+    [ConditionType.Lte]: "至多",
 }
 
 export function validateRules(rules: SimpleRule[][]): boolean {
@@ -230,23 +230,23 @@ export function getStarType(star: Star) {
         switch (star.spectr) {
             case SpectrType.M:
             case SpectrType.K:
-                return "Red Giant"
+                return "红巨星"
             case SpectrType.G:
             case SpectrType.F:
-                return "Yellow Giant"
+                return "黄巨星"
             case SpectrType.A:
-                return "White Giant"
+                return "白巨星"
             default:
-                return "Blue Giant"
+                return "蓝巨星"
         }
     } else if (star.type === StarType.WhiteDwarf) {
-        return "White Dwarf"
+        return "白矮星"
     } else if (star.type === StarType.NeutronStar) {
-        return "Neutron Star"
+        return "中子星"
     } else if (star.type === StarType.BlackHole) {
-        return "Black Hole"
+        return "黑洞"
     } else {
-        return star.spectr + " type Star"
+        return star.spectr + "型恒星"
     }
 }
 

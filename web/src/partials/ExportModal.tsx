@@ -135,13 +135,13 @@ const ProgressModal: Component<{
     const progressText = () => {
         switch (status()) {
             case Status.Starting:
-                return "Retriving Data"
+                return "检索数据中"
             case Status.Progressing:
-                return `Exporting ${progress()} / ${total()}`
+                return `导出中 ${progress()} / ${total()}`
             case Status.Generating:
-                return "Generating file"
+                return "生成文件中"
             case Status.Done:
-                return "Done"
+                return "完成"
         }
     }
 
@@ -209,7 +209,7 @@ const ProgressModal: Component<{
             <div class={styles.progressText}>{progressText()}</div>
             <Show when={url()}>
                 <a class={styles.download} download={props.name} href={url()}>
-                    <Button class={styles.button}>Download</Button>
+                    <Button class={styles.button}>下载</Button>
                 </a>
             </Show>
             <Button
@@ -217,7 +217,7 @@ const ProgressModal: Component<{
                 kind="outline"
                 onClick={props.onClose}
             >
-                {status() === Status.Done ? "Close" : "Stop"}
+                {status() === Status.Done ? "关闭" : "停止"}
             </Button>
         </Modal>
     )
@@ -259,12 +259,12 @@ const ExportModal: Component<{
 
     return (
         <Modal visible={props.visible} onClose={props.onClose} backdropDismiss>
-            <div class={styles.title}>Export</div>
+            <div class={styles.title}>导出</div>
             <div class={styles.warn}>
-                Warning: Exporting too many seeds may cause out of memory error.
+                警告：导出过多种子可能会导致内存不足错误。
             </div>
             <div class={styles.fields}>
-                <div class={styles.label}>Format</div>
+                <div class={styles.label}>格式</div>
                 <div class={styles.input}>
                     <Select
                         class={styles.inputStandard}
@@ -274,7 +274,7 @@ const ExportModal: Component<{
                         getLabel={(value) => value}
                     />
                 </div>
-                <div class={styles.label}>Star Count</div>
+                <div class={styles.label}>恒星数量</div>
                 <div class={styles.input}>
                     <StarCountSelector
                         class={styles.inputStandard}
@@ -282,7 +282,7 @@ const ExportModal: Component<{
                         onChange={(value) => setOptions("starCount", value)}
                     />
                 </div>
-                <div class={styles.label}>Resource Multiplier</div>
+                <div class={styles.label}>资源倍率</div>
                 <div class={styles.input}>
                     <ResourceMultiplierSelector
                         class={styles.inputStandard}
@@ -292,7 +292,7 @@ const ExportModal: Component<{
                         }
                     />
                 </div>
-                <div class={styles.label}>Seed Range</div>
+                <div class={styles.label}>种子范围</div>
                 <div class={styles.input}>
                     <NumberInput
                         class={styles.inputSeed}
@@ -304,7 +304,7 @@ const ExportModal: Component<{
                             options.start < 0 || options.start >= options.end
                         }
                     />{" "}
-                    to{" "}
+                    到{" "}
                     <NumberInput
                         class={styles.inputSeed}
                         value={options.end}
@@ -318,8 +318,8 @@ const ExportModal: Component<{
                 </div>
                 <Show when={props.mode === "star"}>
                     <div class={styles.label}>
-                        <Tooltip text="Export all stars instead of only the matching ones">
-                            Export all
+                        <Tooltip text="导出所有恒星而不仅仅是匹配的恒星">
+                            导出全部
                         </Tooltip>
                     </div>
                     <div class={styles.input}>
@@ -331,7 +331,7 @@ const ExportModal: Component<{
                         />
                     </div>
                 </Show>
-                <div class={styles.label}>Concurrency</div>
+                <div class={styles.label}>并发数</div>
                 <div class={styles.input}>
                     <NumberInput
                         class={styles.inputStandard}
@@ -350,7 +350,7 @@ const ExportModal: Component<{
                 class={styles.button}
                 onClick={() => setProgressModal(true)}
             >
-                Export
+                导出
             </Button>
             <ProgressModal
                 visible={progressModal()}

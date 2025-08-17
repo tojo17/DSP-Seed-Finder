@@ -20,39 +20,39 @@ const ProfileManager: Component<{
 
     return (
         <div class={styles.top}>
-            Profile:
+            配置：
             <Button onClick={props.onLoad} disabled={props.disabled}>
-                Load
+                加载
             </Button>
             <Button
                 onClick={props.onSave}
                 disabled={props.disabled || !props.isValid}
             >
-                Save
+                保存
             </Button>
             <Show when={props.isLoaded}>
                 <Button
                     onClick={() => setNewModal(true)}
                     disabled={props.disabled}
                 >
-                    New
+                    新建
                 </Button>
                 <Button onClick={props.onClone} disabled={props.disabled}>
-                    Clone
+                    复制
                 </Button>
                 <Button
                     theme="error"
                     onClick={() => setClearModal(true)}
                     disabled={props.disabled}
                 >
-                    Clear
+                    清空
                 </Button>
                 <Button
                     theme="error"
                     onClick={() => setDeleteModal(true)}
                     disabled={props.disabled}
                 >
-                    Delete
+                    删除
                 </Button>
             </Show>
             <Modal
@@ -60,10 +60,9 @@ const ProfileManager: Component<{
                 onClose={() => setClearModal(false)}
                 backdropDismiss
             >
-                <div class={styles.modalTitle}>Are you sure?</div>
+                <div class={styles.modalTitle}>确认操作</div>
                 <div class={styles.warnText}>
-                    Do you really want to clear all progress? This cannot be
-                    undone.
+                    您确定要清空所有进度吗？此操作无法撤销。
                 </div>
                 <div class={styles.warnButtons}>
                     <Button
@@ -73,10 +72,10 @@ const ProfileManager: Component<{
                             props.onClear()
                         }}
                     >
-                        Clear
+                        清空
                     </Button>
                     <Button kind="outline" onClick={() => setClearModal(false)}>
-                        Cancel
+                        取消
                     </Button>
                 </div>
             </Modal>
@@ -85,10 +84,9 @@ const ProfileManager: Component<{
                 onClose={() => setDeleteModal(false)}
                 backdropDismiss
             >
-                <div class={styles.modalTitle}>Are you sure?</div>
+                <div class={styles.modalTitle}>确认操作</div>
                 <div class={styles.warnText}>
-                    Do you really want to delete all settings and progress? This
-                    cannot be undone.
+                    您确定要删除所有设置和进度吗？此操作无法撤销。
                 </div>
                 <div class={styles.warnButtons}>
                     <Button
@@ -98,13 +96,13 @@ const ProfileManager: Component<{
                             props.onDelete()
                         }}
                     >
-                        Delete
+                        删除
                     </Button>
                     <Button
                         kind="outline"
                         onClick={() => setDeleteModal(false)}
                     >
-                        Cancel
+                        取消
                     </Button>
                 </div>
             </Modal>
@@ -113,10 +111,9 @@ const ProfileManager: Component<{
                 onClose={() => setNewModal(false)}
                 backdropDismiss
             >
-                <div class={styles.modalTitle}>Are you sure?</div>
+                <div class={styles.modalTitle}>确认操作</div>
                 <div class={styles.warnText}>
-                    Do you really want to create a new profile? All unsaved
-                    changes will be lost.
+                    您确定要创建新配置吗？所有未保存的更改将丢失。
                 </div>
                 <div class={styles.warnButtons}>
                     <Button
@@ -125,10 +122,10 @@ const ProfileManager: Component<{
                             props.onNew()
                         }}
                     >
-                        Confirm
+                        确认
                     </Button>
                     <Button kind="outline" onClick={() => setNewModal(false)}>
-                        Cancel
+                        取消
                     </Button>
                 </div>
             </Modal>

@@ -30,7 +30,7 @@ const SelectSimpleRule: Component<{
             onChange={props.onChange}
             isSelected={(rule) => rule.type === props.value?.type}
             options={rules}
-            placeholder="Select..."
+            placeholder="选择..."
             getLabel={(rule) => ruleNames[rule.type]}
             error={!props.value || props.value?.type === RuleType.None}
             disabled={props.disabled}
@@ -83,7 +83,7 @@ const EditLuminosity: Component<{
         props.onChange({ ...props.value, condition })
     return (
         <>
-            Is{" "}
+            亮度{" "}
             <ConditionTypeSelector
                 value={condition()}
                 onChange={setCondition}
@@ -112,7 +112,7 @@ const EditDysonRadius: Component<{
         props.onChange({ ...props.value, condition })
     return (
         <>
-            Is{" "}
+            戴森球半径{" "}
             <ConditionTypeSelector
                 value={condition()}
                 onChange={setCondition}
@@ -142,7 +142,7 @@ const EditAverageVeinAmount: Component<{
         props.onChange({ ...props.value, condition })
     return (
         <>
-            Has{" "}
+            含有{" "}
             <Select
                 class={styles.selectVein}
                 value={props.value.vein}
@@ -151,7 +151,7 @@ const EditAverageVeinAmount: Component<{
                 getLabel={(vein) => veinNames[vein]}
                 disabled={props.disabled}
             />{" "}
-            and the estimated amount is{" "}
+            且预估储量{" "}
             <ConditionTypeSelector
                 value={condition()}
                 onChange={setCondition}
@@ -177,7 +177,7 @@ const EditSpectr: Component<{
 }> = (props) => {
     return (
         <>
-            Is a{" "}
+            是{" "}
             <Select
                 class={styles.selectSpectr}
                 value={props.value.spectr[0]}
@@ -188,7 +188,7 @@ const EditSpectr: Component<{
                 getLabel={(spectr) => spectr}
                 disabled={props.disabled}
             />{" "}
-            type star
+            型恒星
         </>
     )
 }
@@ -203,7 +203,7 @@ const EditTidalLockCount: Component<{
         props.onChange({ ...props.value, condition })
     return (
         <>
-            Has{" "}
+            含有{" "}
             <ConditionTypeSelector
                 value={condition()}
                 onChange={setCondition}
@@ -217,7 +217,7 @@ const EditTidalLockCount: Component<{
                 error={condition().value <= 0}
                 disabled={props.disabled}
             />{" "}
-            tidally locked planets
+            潮汐锁定行星
         </>
     )
 }
@@ -229,7 +229,7 @@ const EditOceanType: Component<{
 }> = (props) => {
     return (
         <>
-            Has planets with{" "}
+            含有{" "}
             <Select
                 class={styles.selectOcean}
                 value={props.value.oceanType}
@@ -238,11 +238,11 @@ const EditOceanType: Component<{
                 }
                 options={oceans}
                 getLabel={(oceanType) =>
-                    oceanType === OceanType.Water ? "Water" : "Sulfuric Acid"
+                    oceanType === OceanType.Water ? "水" : "硫酸"
                 }
                 disabled={props.disabled}
             />{" "}
-            Ocean
+            海洋的行星
         </>
     )
 }
@@ -254,7 +254,7 @@ const EditStarType: Component<{
 }> = (props) => {
     return (
         <>
-            Is a{" "}
+            是{" "}
             <Select
                 class={styles.selectStarType}
                 value={props.value.starType[0]}
@@ -279,7 +279,7 @@ const EditGasCount: Component<{
         props.onChange({ ...props.value, condition })
     return (
         <>
-            Has{" "}
+            含有{" "}
             <ConditionTypeSelector
                 value={condition()}
                 onChange={setCondition}
@@ -299,11 +299,11 @@ const EditGasCount: Component<{
                 onChange={(ice) => props.onChange({ ...props.value, ice })}
                 options={[null, false, true]}
                 getLabel={(ice) =>
-                    ice === null ? "gas/ice" : ice ? "ice" : "gas"
+                    ice === null ? "气/冰" : ice ? "冰" : "气"
                 }
                 disabled={props.disabled}
             />{" "}
-            giant(s)
+            巨行星
         </>
     )
 }
@@ -318,7 +318,7 @@ const EditSatelliteCount: Component<{
         props.onChange({ ...props.value, condition })
     return (
         <>
-            Has{" "}
+            含有{" "}
             <ConditionTypeSelector
                 value={condition()}
                 onChange={setCondition}
@@ -332,7 +332,7 @@ const EditSatelliteCount: Component<{
                 error={condition().value <= 0}
                 disabled={props.disabled}
             />{" "}
-            satellite(s)
+            卫星
         </>
     )
 }
@@ -347,7 +347,7 @@ const EditPlanetCount: Component<{
         props.onChange({ ...props.value, condition })
     return (
         <>
-            Has{" "}
+            含有{" "}
             <ConditionTypeSelector
                 value={condition()}
                 onChange={setCondition}
@@ -361,7 +361,7 @@ const EditPlanetCount: Component<{
                 error={condition().value <= 1}
                 disabled={props.disabled}
             />{" "}
-            planets,{" "}
+            行星，{" "}
             <Select
                 class={styles.selectGasType}
                 value={props.value.excludeGiant}
@@ -370,11 +370,11 @@ const EditPlanetCount: Component<{
                 }
                 options={[false, true]}
                 getLabel={(excludeGiant) =>
-                    excludeGiant ? "excluding" : "including"
+                    excludeGiant ? "不包括" : "包括"
                 }
                 disabled={props.disabled}
             />{" "}
-            gas/ice giants.
+            气态巨行星/冰巨行星。
         </>
     )
 }
@@ -389,7 +389,7 @@ const EditBirthDistance: Component<{
         props.onChange({ ...props.value, condition })
     return (
         <>
-            Is{" "}
+距离初始星系{" "}
             <ConditionTypeSelector
                 value={condition()}
                 onChange={setCondition}
@@ -403,7 +403,7 @@ const EditBirthDistance: Component<{
                 error={condition().value <= 0}
                 disabled={props.disabled}
             />
-            ly away from the starting system
+            光年
         </>
     )
 }
@@ -418,7 +418,7 @@ const EditXDistance: Component<{
         props.onChange({ ...props.value, condition })
     return (
         <>
-            Is{" "}
+距离{" "}
             <ConditionTypeSelector
                 value={condition()}
                 onChange={setCondition}
@@ -432,16 +432,16 @@ const EditXDistance: Component<{
                 error={condition().value <= 0}
                 disabled={props.disabled}
             />{" "}
-            ly away from{" "}
+            光年 远离{" "}
             <Select
                 class={styles.selectAllOrAny}
                 value={!!props.value.all}
                 onChange={(all) => props.onChange({ ...props.value, all })}
                 options={[false, true]}
-                getLabel={(all) => (all ? "all" : "any")}
+                getLabel={(all) => (all ? "所有" : "任意")}
                 disabled={props.disabled}
             />{" "}
-            black hole / neutron star{props.value.all ? "s" : ""}.
+            黑洞 / 中子星{props.value.all ? "" : ""}。
         </>
     )
 }
@@ -459,7 +459,7 @@ const EditSpectrDistance: Component<{
         props.onChange({ ...props.value, distanceCondition })
     return (
         <>
-            Has{" "}
+            含有{" "}
             <ConditionTypeSelector
                 value={countCondition()}
                 onChange={setCountCondition}
@@ -483,7 +483,7 @@ const EditSpectrDistance: Component<{
                 getLabel={(spectr) => spectr}
                 disabled={props.disabled}
             />{" "}
-            type stars that are{" "}
+            型恒星距离{" "}
             <ConditionTypeSelector
                 value={distanceCondition()}
                 onChange={setDistanceCondition}
@@ -497,7 +497,7 @@ const EditSpectrDistance: Component<{
                 error={distanceCondition().value <= 0}
                 disabled={props.disabled}
             />{" "}
-            ly away.
+            光年。
         </>
     )
 }
@@ -512,7 +512,7 @@ const EditGasRate: Component<{
         props.onChange({ ...props.value, condition })
     return (
         <>
-            Has{" "}
+            含有{" "}
             <Select
                 class={styles.selectGasType}
                 value={props.value.gasType}
@@ -523,7 +523,7 @@ const EditGasRate: Component<{
                 getLabel={(vein) => gasTypeNames[vein]}
                 disabled={props.disabled}
             />{" "}
-            and{" "}
+            且产量{" "}
             <ConditionTypeSelector
                 value={condition()}
                 onChange={setCondition}
@@ -537,7 +537,7 @@ const EditGasRate: Component<{
                 error={condition().value <= 0}
                 disabled={props.disabled}
             />
-            /s of it
+            /s
         </>
     )
 }
@@ -552,7 +552,7 @@ const EditPlanetInDysonCount: Component<{
         props.onChange({ ...props.value, condition })
     return (
         <>
-            Has{" "}
+            含有{" "}
             <ConditionTypeSelector
                 value={condition()}
                 onChange={setCondition}
@@ -566,7 +566,7 @@ const EditPlanetInDysonCount: Component<{
                 error={condition().value <= 0}
                 disabled={props.disabled}
             />{" "}
-            planet(s) within max dyson sphere radius,{" "}
+            行星在戴森球最大半径内，{" "}
             <Select
                 class={styles.selectGasType}
                 value={props.value.includeGiant}
@@ -575,11 +575,11 @@ const EditPlanetInDysonCount: Component<{
                 }
                 options={[false, true]}
                 getLabel={(includeGiant) =>
-                    includeGiant ? "including" : "excluding"
+                    includeGiant ? "包括" : "不包括"
                 }
                 disabled={props.disabled}
             />{" "}
-            gas/ice giants.
+            气态巨行星/冰巨行星。
         </>
     )
 }
@@ -595,7 +595,7 @@ const EditThemeId: Component<{
 }> = (props) => {
     return (
         <>
-            Has a{" "}
+            有{" "}
             <Select
                 class={styles.selectPlanetType}
                 value={props.value.themeIds[0]!}
@@ -606,7 +606,7 @@ const EditThemeId: Component<{
                 getLabel={(themeId) => planetTypes[themeId]!}
                 disabled={props.disabled}
             />{" "}
-            planet.
+            行星。
         </>
     )
 }
@@ -681,7 +681,7 @@ const EditSimpleRule: Component<{
                 {(value) => <EditThemeId {...props} value={value()} />}
             </Match>
             <Match when={isType(props.value, RuleType.Birth)}>
-                <div class={styles.birth}>Is the starting system</div>
+                <div class={styles.birth}>是出生星系</div>
             </Match>
         </Switch>
     </div>
@@ -738,7 +738,7 @@ const RuleBlockContent: Component<{
                 {(item, index) => (
                     <>
                         <Show when={index > 0}>
-                            <div class={styles.or}>OR</div>
+                            <div class={styles.or}>或</div>
                         </Show>
                         <div class={styles.row}>
                             <SelectSimpleRule
@@ -763,7 +763,7 @@ const RuleBlockContent: Component<{
 
             <Show when={!props.disabled}>
                 <Button class={styles.addOr} kind="outline" onClick={onAdd}>
-                    Add OR rule
+                    添加 或 规则
                 </Button>
             </Show>
         </Show>
@@ -808,7 +808,7 @@ const RuleEditor: Component<{
                     {(group, index) => (
                         <>
                             <Show when={index > 0}>
-                                <div class={styles.and}>AND</div>
+                                <div class={styles.and}>且</div>
                             </Show>
                             <div class={styles.block}>
                                 <RuleBlockContent
@@ -834,7 +834,7 @@ const RuleEditor: Component<{
                         kind="outline"
                         onClick={onAdd}
                     >
-                        Add AND rule
+                        添加 且 规则
                     </Button>
                 </Show>
             </Show>
@@ -845,26 +845,26 @@ const RuleEditor: Component<{
 export default RuleEditor
 
 const ruleNames: Record<RuleType, string> = {
-    [RuleType.None]: "Select...",
+    [RuleType.None]: "选择...",
     [RuleType.And]: "",
     [RuleType.Or]: "",
-    [RuleType.Birth]: "Starting System",
-    [RuleType.StarType]: "Type of star",
-    [RuleType.BirthDistance]: "Distance from Start",
-    [RuleType.XDistance]: "Distance from X Star",
-    [RuleType.SpectrDistance]: "Distance from Other Stars",
-    [RuleType.Luminosity]: "Luminosity",
-    [RuleType.Spectr]: "Spectral Class",
-    [RuleType.DysonRadius]: "Max Dyson Sphere Radius",
-    [RuleType.PlanetCount]: "Planet Count",
-    [RuleType.SatelliteCount]: "Satellite Count",
-    [RuleType.TidalLockCount]: "Tidally Locked Planet Count",
-    [RuleType.ThemeId]: "Planet Themes",
-    [RuleType.GasCount]: "Gas/Ice Giant Count",
-    [RuleType.OceanType]: "Ocean",
-    [RuleType.GasRate]: "Gas Rate",
-    [RuleType.AverageVeinAmount]: "Vein Amount",
-    [RuleType.PlanetInDysonCount]: "Planets in Dyson Sphere",
+    [RuleType.Birth]: "出生星系",
+    [RuleType.StarType]: "恒星类型",
+    [RuleType.BirthDistance]: "距离出生星系",
+    [RuleType.XDistance]: "距离X型恒星",
+    [RuleType.SpectrDistance]: "距离其他恒星",
+    [RuleType.Luminosity]: "亮度",
+    [RuleType.Spectr]: "光谱类型",
+    [RuleType.DysonRadius]: "最大戴森球半径",
+    [RuleType.PlanetCount]: "行星数量",
+    [RuleType.SatelliteCount]: "卫星数量",
+    [RuleType.TidalLockCount]: "潮汐锁定行星数量",
+    [RuleType.ThemeId]: "行星主题",
+    [RuleType.GasCount]: "气态/冰巨行星数量",
+    [RuleType.OceanType]: "海洋",
+    [RuleType.GasRate]: "气体产量",
+    [RuleType.AverageVeinAmount]: "矿脉储量",
+    [RuleType.PlanetInDysonCount]: "戴森球内行星",
 }
 
 const rules: SimpleRule[] = [
@@ -1023,11 +1023,11 @@ const starTypes: StarType[] = [
 ]
 
 const starTypeNames: Record<StarType, string> = {
-    [StarType.MainSeqStar]: "Normal Star",
-    [StarType.GiantStar]: "Giant Star",
-    [StarType.WhiteDwarf]: "White Dwarf",
-    [StarType.BlackHole]: "Black Hole",
-    [StarType.NeutronStar]: "Neutron Star",
+    [StarType.MainSeqStar]: "恒星",
+    [StarType.GiantStar]: "巨星",
+    [StarType.WhiteDwarf]: "白矮星",
+    [StarType.BlackHole]: "黑洞",
+    [StarType.NeutronStar]: "中子星",
 }
 
 const gasTypes: GasType[] = [
@@ -1038,7 +1038,7 @@ const gasTypes: GasType[] = [
 
 const gasTypeNames: Record<GasType, string> = {
     [GasType.None]: "",
-    [GasType.Hydrogen]: "Hydrogen",
-    [GasType.Deuterium]: "Deuterium",
-    [GasType.Fireice]: "Fire Ice",
+    [GasType.Hydrogen]: "氢气",
+    [GasType.Deuterium]: "重氢",
+    [GasType.Fireice]: "可燃冰",
 }

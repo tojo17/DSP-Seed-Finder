@@ -17,12 +17,12 @@ function ProfilesModal(props: {
 
     return (
         <Modal visible={props.visible} onClose={props.onClose} backdropDismiss>
-            <div class={styles.title}>Profiles</div>
+            <div class={styles.title}>配置文件</div>
             <div class={styles.profiles}>
                 <Show
                     when={!!profiles()?.length}
                     fallback={
-                        <div class={styles.noResult}>No saved profiles.</div>
+                        <div class={styles.noResult}>没有保存的配置文件。</div>
                     }
                 >
                     <For each={profiles()}>

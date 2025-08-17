@@ -89,14 +89,14 @@ const StarViewModal: Component<{
         <Show when={!!galaxy()}>
             <div class={styles.viewTop}>
                 <div class={styles.viewTitle}>
-                    Seed: {String(props.seed).padStart(8, "0")}
+                    种子：{String(props.seed).padStart(8, "0")}
                 </div>
                 <A
                     class={styles.viewNewTab}
                     href={buildUrl(props.index)}
                     target="_blank"
                 >
-                    View in new tab
+                    在新标签页中查看
                     <IoOpenOutline />
                 </A>
             </div>
@@ -203,7 +203,7 @@ const SearchResult: Component<{
 const FindStar: Component = () => {
     const params = useParams()
     const navigate = useNavigate()
-    const [name, setName] = createSignal("Untitled")
+    const [name, setName] = createSignal("未命名")
     const [profile, setProfile] = createSignal<ProfileInfo | null>()
     const [progress, setProgress] =
         createStore<ProfileProgress>(defaultProgress())
@@ -256,7 +256,7 @@ const FindStar: Component = () => {
         batch(() => {
             const origName = name()
             changeProfile(null)
-            setName(origName + " - Copy")
+            setName(origName + " - 副本")
             setProgress({ id: "", current: 0 })
         })
     }
@@ -424,7 +424,7 @@ const FindStar: Component = () => {
                 isLoaded={isLoaded()}
                 searching={store.searching}
             />
-            <div class={styles.rules}>Rules</div>
+            <div class={styles.rules}>规则</div>
             <RuleEditor
                 value={progress.rules}
                 onChange={(rules) => setProgress("rules", rules)}
@@ -438,7 +438,7 @@ const FindStar: Component = () => {
                             (hasProgress() && !hasCompleted())
                         }
                     >
-                        <div class={styles.progressText}>Progress:</div>
+                        <div class={styles.progressText}>进度：</div>
                         <ProgressBar
                             class={styles.progressBar}
                             current={progress.current - progress.start}
@@ -447,7 +447,7 @@ const FindStar: Component = () => {
                     </Show>
                 </div>
                 <Show when={hasProgress()}>
-                    <Button onClick={() => setExportModal(true)}>Export</Button>
+                    <Button onClick={() => setExportModal(true)}>导出</Button>
                 </Show>
                 <Switch
                     fallback={
@@ -455,15 +455,15 @@ const FindStar: Component = () => {
                             disabled={!isValid()}
                             onClick={onStartSearching}
                         >
-                            {hasProgress() ? "Resume" : "Start"}
+                            {hasProgress() ? "继续" : "开始"}
                         </Button>
                     }
                 >
                     <Match when={store.searching}>
-                        <Button onClick={onStopSearching}>Pause</Button>
+                        <Button onClick={onStopSearching}>暂停</Button>
                     </Match>
                     <Match when={hasCompleted()}>
-                        <span class={styles.completed}>Completed!</span>
+                        <span class={styles.completed}>已完成！</span>
                     </Match>
                 </Switch>
             </div>
