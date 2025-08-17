@@ -15,7 +15,6 @@ use std::sync::Arc;
 use tokio::sync::mpsc;
 use std::time::SystemTime;
 use tokio::net::{TcpListener, TcpStream};
-use core_affinity;
 use tokio::runtime::Handle;
 use tokio_tungstenite::accept_async;
 use tokio_tungstenite::tungstenite::Message;
@@ -152,31 +151,16 @@ async fn accept_connection(stream: TcpStream) {
                         // Create channel for communication between threads and async task
                         let (tx, mut rx) = mpsc::unbounded_channel::<InternalMessage>();
                         
-                        // Get P-core IDs (assuming first 16 logical cores are P-cores for i9-12900KF)
-                        let core_ids: Vec<_> = core_affinity::get_core_ids()
-                            .unwrap_or_default()
-                            .into_iter()
-                            .take(16)  // Use only P-cores (first 16 logical cores)
-                            .collect();
-                        
-                        println!("Available P-cores: {:?}", core_ids);
-                        
-                        // Spawn worker threads using std::thread
-                        for thread_idx in 0..threads {
+                        // Spawn worker threads using std::thread  
+                        for _ in 0..threads {
                             let tx = tx.clone();
                             let mut transformed = transform_rules::transform_rules(rule.clone());
                             let mut g = game.clone();
                             let s = state.clone();
                             let cs = current_seed.clone();
                             let stop = stopped.clone();
-                            let core_id = core_ids.get(thread_idx as usize % core_ids.len()).copied();
                             
                             std::thread::spawn(move || {
-                                // Set CPU affinity to P-cores only
-                                if let Some(core_id) = core_id {
-                                    let _ = core_affinity::set_for_current(core_id);
-                                    println!("Thread {} pinned to P-core {:?}", thread_idx, core_id);
-                                }
                                 const BATCH_SIZE: i32 = 200;
                                 loop {
                                     // Get a batch of seeds to process
