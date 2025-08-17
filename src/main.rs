@@ -12,8 +12,10 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::sync::atomic::{AtomicBool, AtomicI32, Ordering};
 use std::sync::Arc;
+use tokio::sync::mpsc;
 use std::time::SystemTime;
 use tokio::net::{TcpListener, TcpStream};
+use core_affinity;
 use tokio::runtime::Handle;
 use tokio_tungstenite::accept_async;
 use tokio_tungstenite::tungstenite::Message;
@@ -54,6 +56,13 @@ enum OutgoingMessage {
     Result { seed: i32, indexes: Vec<usize> },
     Progress { start: i32, end: i32 },
     Done { start: i32, end: i32 },
+}
+
+#[derive(Clone)]
+enum InternalMessage {
+    Result { seed: i32, indexes: Vec<usize> },
+    Progress { start: i32, end: i32 },
+    ThreadFinished,
 }
 
 struct FindState {
@@ -139,16 +148,36 @@ async fn accept_connection(stream: TcpStream) {
                             last_notify: SystemTime::now(),
                         }));
                         stopped.store(false, Ordering::SeqCst);
-                        for _ in 0..threads {
-                            let w = boxed_write.clone();
+                        
+                        // Create channel for communication between threads and async task
+                        let (tx, mut rx) = mpsc::unbounded_channel::<InternalMessage>();
+                        
+                        // Get P-core IDs (assuming first 16 logical cores are P-cores for i9-12900KF)
+                        let core_ids: Vec<_> = core_affinity::get_core_ids()
+                            .unwrap_or_default()
+                            .into_iter()
+                            .take(16)  // Use only P-cores (first 16 logical cores)
+                            .collect();
+                        
+                        println!("Available P-cores: {:?}", core_ids);
+                        
+                        // Spawn worker threads using std::thread
+                        for thread_idx in 0..threads {
+                            let tx = tx.clone();
                             let mut transformed = transform_rules::transform_rules(rule.clone());
                             let mut g = game.clone();
                             let s = state.clone();
                             let cs = current_seed.clone();
                             let stop = stopped.clone();
-                            tokio::task::spawn_blocking(move || {
+                            let core_id = core_ids.get(thread_idx as usize % core_ids.len()).copied();
+                            
+                            std::thread::spawn(move || {
+                                // Set CPU affinity to P-cores only
+                                if let Some(core_id) = core_id {
+                                    let _ = core_affinity::set_for_current(core_id);
+                                    println!("Thread {} pinned to P-core {:?}", thread_idx, core_id);
+                                }
                                 const BATCH_SIZE: i32 = 200;
-                                let runtime = Handle::current();
                                 loop {
                                     // Get a batch of seeds to process
                                     let batch_start = cs
@@ -163,87 +192,77 @@ async fn accept_connection(stream: TcpStream) {
                                     }
                                     
                                     // Process the batch
-                                    let mut batch_results = Vec::new();
                                     for seed in batch_start..batch_end {
+                                        if stop.load(Ordering::SeqCst) {
+                                            break;
+                                        }
+                                        
                                         g.seed = seed;
                                         let star_indexes = find_stars(&g, &mut transformed);
                                         if !star_indexes.is_empty() {
-                                            batch_results.push((seed, star_indexes));
-                                        }
-                                        
-                                        if stop.load(Ordering::SeqCst) {
-                                            break;
+                                            let _ = tx.send(InternalMessage::Result { seed, indexes: star_indexes });
                                         }
                                     }
                                     
                                     // Batch update progress - only acquire lock once per batch
-                                    let mut notifications = Vec::new();
                                     {
                                         let mut x = s.lock().unwrap();
-                                        // Add all seeds in the batch sequentially
                                         for seed in batch_start..batch_end {
-                                            if let Some(progress) = x.add(seed) {
-                                                notifications.push(progress);
+                                            if let Some((start, end)) = x.add(seed) {
+                                                let _ = tx.send(InternalMessage::Progress { start, end });
                                             }
                                         }
-                                    }
-                                    
-                                    // Send all results and notifications
-                                    if !batch_results.is_empty() || !notifications.is_empty() {
-                                        let w2 = w.clone();
-                                        runtime.block_on(async move {
-                                            let mut stream = w2.lock().await;
-                                            
-                                            // Send found results
-                                            for (seed, star_indexes) in batch_results {
-                                                let output = serde_json::to_string(
-                                                    &OutgoingMessage::Result {
-                                                        seed,
-                                                        indexes: star_indexes,
-                                                    },
-                                                )
-                                                .unwrap();
-                                                stream.send(Message::Text(output)).await.unwrap();
-                                            }
-                                            
-                                            // Send progress notifications
-                                            for (start, end) in notifications {
-                                                println!("Processing: {}.", end);
-                                                let output = serde_json::to_string(
-                                                    &OutgoingMessage::Progress { start, end },
-                                                )
-                                                .unwrap();
-                                                stream.send(Message::Text(output)).await.unwrap();
-                                            }
-                                        });
                                     }
                                     
                                     if stop.load(Ordering::SeqCst) {
                                         break;
                                     }
                                 }
-                                let mut x = s.lock().unwrap();
-                                x.running -= 1;
-                                if x.running == 0 {
-                                    let progress_start = x.progress_start;
-                                    let progress_end = x.progress_end;
-                                    println!("Completed: {}.", progress_end);
-                                    runtime.block_on(async move {
-                                        w.lock()
-                                            .await
-                                            .send(Message::Text(
-                                                serde_json::to_string(&OutgoingMessage::Done {
-                                                    start: progress_start,
-                                                    end: progress_end,
-                                                })
-                                                .unwrap(),
-                                            ))
-                                            .await
-                                            .unwrap();
-                                    })
-                                }
+                                
+                                // Signal thread completion
+                                let _ = tx.send(InternalMessage::ThreadFinished);
                             });
                         }
+                        
+                        // Drop the original sender so the receiver will know when all threads are done
+                        drop(tx);
+                        
+                        // Spawn async task to handle messages
+                        let w = boxed_write.clone();
+                        let state_for_completion = state.clone();
+                        tokio::spawn(async move {
+                            let mut finished_threads = 0;
+                            
+                            while let Some(msg) = rx.recv().await {
+                                match msg {
+                                    InternalMessage::Result { seed, indexes } => {
+                                        let output = serde_json::to_string(&OutgoingMessage::Result { seed, indexes }).unwrap();
+                                        let _ = w.lock().await.send(Message::Text(output)).await;
+                                    }
+                                    InternalMessage::Progress { start, end } => {
+                                        println!("Processing: {}.", end);
+                                        let output = serde_json::to_string(&OutgoingMessage::Progress { start, end }).unwrap();
+                                        let _ = w.lock().await.send(Message::Text(output)).await;
+                                    }
+                                    InternalMessage::ThreadFinished => {
+                                        finished_threads += 1;
+                                        if finished_threads == threads {
+                                            let (progress_start, progress_end) = {
+                                                let x = state_for_completion.lock().unwrap();
+                                                (x.progress_start, x.progress_end)
+                                            };
+                                            println!("Completed: {}.", progress_end);
+                                            let output = serde_json::to_string(&OutgoingMessage::Done { 
+                                                start: progress_start, 
+                                                end: progress_end 
+                                            }).unwrap();
+                                            let _ = w.lock().await.send(Message::Text(output)).await;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        });
                     }
                 }
             }
