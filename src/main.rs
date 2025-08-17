@@ -147,7 +147,7 @@ async fn accept_connection(stream: TcpStream) {
                             let cs = current_seed.clone();
                             let stop = stopped.clone();
                             tokio::task::spawn_blocking(move || {
-                                const BATCH_SIZE: i32 = 50;
+                                const BATCH_SIZE: i32 = 200;
                                 let runtime = Handle::current();
                                 loop {
                                     // Get a batch of seeds to process
@@ -176,15 +176,15 @@ async fn accept_connection(stream: TcpStream) {
                                         }
                                     }
                                     
-                                    // Update progress and send results after processing the batch
+                                    // Batch update progress - only acquire lock once per batch
                                     let mut notifications = Vec::new();
-                                    for seed in batch_start..batch_end {
-                                        let notify_progress = {
-                                            let mut x = s.lock().unwrap();
-                                            x.add(seed)
-                                        };
-                                        if let Some(progress) = notify_progress {
-                                            notifications.push(progress);
+                                    {
+                                        let mut x = s.lock().unwrap();
+                                        // Add all seeds in the batch sequentially
+                                        for seed in batch_start..batch_end {
+                                            if let Some(progress) = x.add(seed) {
+                                                notifications.push(progress);
+                                            }
                                         }
                                     }
                                     
