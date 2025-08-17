@@ -147,27 +147,55 @@ async fn accept_connection(stream: TcpStream) {
                             let cs = current_seed.clone();
                             let stop = stopped.clone();
                             tokio::task::spawn_blocking(move || {
+                                const BATCH_SIZE: i32 = 50;
                                 let runtime = Handle::current();
                                 loop {
-                                    let seed = cs
+                                    // Get a batch of seeds to process
+                                    let batch_start = cs
                                         .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |x| {
-                                            Some(x + 1)
+                                            Some(x + BATCH_SIZE)
                                         })
                                         .unwrap();
-                                    if seed >= end {
+                                    let batch_end = (batch_start + BATCH_SIZE).min(end);
+                                    
+                                    if batch_start >= end {
                                         break;
                                     }
-                                    g.seed = seed;
-                                    let star_indexes = find_stars(&g, &mut transformed);
-                                    let notify_progress = {
-                                        let mut x = s.lock().unwrap();
-                                        x.add(seed)
-                                    };
-                                    if notify_progress.is_some() || !star_indexes.is_empty() {
+                                    
+                                    // Process the batch
+                                    let mut batch_results = Vec::new();
+                                    for seed in batch_start..batch_end {
+                                        g.seed = seed;
+                                        let star_indexes = find_stars(&g, &mut transformed);
+                                        if !star_indexes.is_empty() {
+                                            batch_results.push((seed, star_indexes));
+                                        }
+                                        
+                                        if stop.load(Ordering::SeqCst) {
+                                            break;
+                                        }
+                                    }
+                                    
+                                    // Update progress and send results after processing the batch
+                                    let mut notifications = Vec::new();
+                                    for seed in batch_start..batch_end {
+                                        let notify_progress = {
+                                            let mut x = s.lock().unwrap();
+                                            x.add(seed)
+                                        };
+                                        if let Some(progress) = notify_progress {
+                                            notifications.push(progress);
+                                        }
+                                    }
+                                    
+                                    // Send all results and notifications
+                                    if !batch_results.is_empty() || !notifications.is_empty() {
                                         let w2 = w.clone();
                                         runtime.block_on(async move {
                                             let mut stream = w2.lock().await;
-                                            if !star_indexes.is_empty() {
+                                            
+                                            // Send found results
+                                            for (seed, star_indexes) in batch_results {
                                                 let output = serde_json::to_string(
                                                     &OutgoingMessage::Result {
                                                         seed,
@@ -177,7 +205,9 @@ async fn accept_connection(stream: TcpStream) {
                                                 .unwrap();
                                                 stream.send(Message::Text(output)).await.unwrap();
                                             }
-                                            if let Some((start, end)) = notify_progress {
+                                            
+                                            // Send progress notifications
+                                            for (start, end) in notifications {
                                                 println!("Processing: {}.", end);
                                                 let output = serde_json::to_string(
                                                     &OutgoingMessage::Progress { start, end },
@@ -187,6 +217,7 @@ async fn accept_connection(stream: TcpStream) {
                                             }
                                         });
                                     }
+                                    
                                     if stop.load(Ordering::SeqCst) {
                                         break;
                                     }
