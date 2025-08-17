@@ -21,8 +21,11 @@ use tokio_tungstenite::tungstenite::Message;
 use transform_rules::Rules;
 use worldgen::galaxy_gen::{create_galaxy, find_stars};
 
-#[tokio::main]
+#[tokio::main(flavor = "multi_thread", worker_threads = 4)]
 async fn main() -> Result<(), std::io::Error> {
+    // Configure larger blocking thread pool
+    std::env::set_var("TOKIO_BLOCKING_THREADS", "32");
+    
     println!("Starting...");
     let listener = TcpListener::bind("127.0.0.1:62879").await?;
     println!("Started.");
@@ -151,7 +154,7 @@ async fn accept_connection(stream: TcpStream) {
                         // Create channel for communication between threads and async task
                         let (tx, mut rx) = mpsc::unbounded_channel::<InternalMessage>();
                         
-                        // Spawn worker threads using std::thread  
+                        // Spawn worker threads using tokio blocking pool  
                         for _ in 0..threads {
                             let tx = tx.clone();
                             let mut transformed = transform_rules::transform_rules(rule.clone());
@@ -160,7 +163,8 @@ async fn accept_connection(stream: TcpStream) {
                             let cs = current_seed.clone();
                             let stop = stopped.clone();
                             
-                            std::thread::spawn(move || {
+                            tokio::task::spawn_blocking(move || {
+                                
                                 const BATCH_SIZE: i32 = 200;
                                 loop {
                                     // Get a batch of seeds to process
