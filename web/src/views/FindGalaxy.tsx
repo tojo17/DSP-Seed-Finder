@@ -189,7 +189,7 @@ const FindGalaxy: Component = () => {
         batch(() => {
             const origName = name()
             changeProfile(null)
-            setName(origName + " - 副本")
+            setName(origName + " - 复制")
             setProgress({ id: "", current: 0 })
         })
     }

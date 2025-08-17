@@ -199,9 +199,9 @@ export const conditionTypeNames: Record<ConditionType, string> = {
     [ConditionType.Eq]: "恰好",
     [ConditionType.Neq]: "不等于",
     [ConditionType.Gt]: "大于",
-    [ConditionType.Gte]: "至少",
+    [ConditionType.Gte]: "不少于",
     [ConditionType.Lt]: "小于",
-    [ConditionType.Lte]: "至多",
+    [ConditionType.Lte]: "不超过",
 }
 
 export function validateRules(rules: SimpleRule[][]): boolean {

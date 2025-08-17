@@ -135,11 +135,11 @@ const ProgressModal: Component<{
     const progressText = () => {
         switch (status()) {
             case Status.Starting:
-                return "检索数据中"
+                return "正在检索数据..."
             case Status.Progressing:
-                return `导出中 ${progress()} / ${total()}`
+                return `正在导出 ${progress()} / ${total()}`
             case Status.Generating:
-                return "生成文件中"
+                return "正在生成文件..."
             case Status.Done:
                 return "完成"
         }

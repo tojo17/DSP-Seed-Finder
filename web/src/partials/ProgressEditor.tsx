@@ -28,7 +28,7 @@ function ProgressEditor<E extends ProfileProgressInfo>(props: {
         <div class={styles.fields}>
             <div class={styles.field}>
                 <div class={styles.label}>
-                    {props.isLoaded ? "" : "新"}配置名称
+                    {props.isLoaded ? "" : "新"}方案名称
                 </div>
                 <div class={styles.input}>
                     <Input

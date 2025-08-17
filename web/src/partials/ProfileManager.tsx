@@ -20,7 +20,7 @@ const ProfileManager: Component<{
 
     return (
         <div class={styles.top}>
-            配置：
+            方案：
             <Button onClick={props.onLoad} disabled={props.disabled}>
                 加载
             </Button>
@@ -113,7 +113,7 @@ const ProfileManager: Component<{
             >
                 <div class={styles.modalTitle}>确认操作</div>
                 <div class={styles.warnText}>
-                    您确定要创建新配置吗？所有未保存的更改将丢失。
+                    您确定要创建新方案吗？所有未保存的更改将丢失。
                 </div>
                 <div class={styles.warnButtons}>
                     <Button

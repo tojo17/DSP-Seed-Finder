@@ -141,11 +141,11 @@ const StarDetail: Component<{
             <div class={styles.value}>{getStarType(props.star)}</div>
         </div>
         <div class={styles.row}>
-            <div class={styles.field}>Spectral Class</div>
+            <div class={styles.field}>光谱类型</div>
             <div class={styles.value}>{props.star.spectr}</div>
         </div>
         <div class={styles.row}>
-            <div class={styles.field}>Luminosity</div>
+            <div class={styles.field}>亮度</div>
             <div class={styles.value}>
                 {formatNumber(props.star.luminosity, 3)} L
             </div>
@@ -255,13 +255,13 @@ const StarVeins: Component<{ star: Star }> = (props) => (
         </For>
         <Show when={hasWater(props.star)}>
             <div class={styles.row}>
-                <div class={styles.field}>Water</div>
+                <div class={styles.field}>水</div>
                 <div class={styles.value}>海洋</div>
             </div>
         </Show>
         <Show when={hasSulfur(props.star)}>
             <div class={styles.row}>
-                <div class={styles.field}>Sulfuric Acid</div>
+                <div class={styles.field}>硫酸</div>
                 <div class={styles.value}>海洋</div>
             </div>
         </Show>
@@ -367,13 +367,13 @@ const PlanetView: Component<{ star: Star; planet: Planet }> = (props) => {
                     </div>
                 </Show>
                 <div class={styles.row}>
-                    <div class={styles.field}>Wind Power</div>
+                    <div class={styles.field}>风能强度</div>
                     <div class={styles.value}>
                         {toPrecision(props.planet.theme.wind * 100, 0)}%
                     </div>
                 </div>
                 <div class={styles.row}>
-                    <div class={styles.field}>Solar Power</div>
+                    <div class={styles.field}>太阳能强度</div>
                     <div class={styles.value}>
                         {toPrecision(props.planet.luminosity * 100, 0)}%
                     </div>
@@ -467,7 +467,7 @@ const StarView: Component<{
                     </div>
                     <div class={styles.card}>
                         <div class={styles.title}>
-                            <span>Resources</span>
+                            <span>资源</span>
                         </div>
                         <StarVeins star={props.star} />
                     </div>

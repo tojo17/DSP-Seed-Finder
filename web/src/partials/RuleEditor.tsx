@@ -389,7 +389,7 @@ const EditBirthDistance: Component<{
         props.onChange({ ...props.value, condition })
     return (
         <>
-距离初始星系{" "}
+与初始星系的距离{" "}
             <ConditionTypeSelector
                 value={condition()}
                 onChange={setCondition}
@@ -402,7 +402,7 @@ const EditBirthDistance: Component<{
                 emptyValue={-1}
                 error={condition().value <= 0}
                 disabled={props.disabled}
-            />
+            />{" "}
             光年
         </>
     )
@@ -418,7 +418,16 @@ const EditXDistance: Component<{
         props.onChange({ ...props.value, condition })
     return (
         <>
-距离{" "}
+与{" "}
+            <Select
+                class={styles.selectAllOrAny}
+                value={!!props.value.all}
+                onChange={(all) => props.onChange({ ...props.value, all })}
+                options={[false, true]}
+                getLabel={(all) => (all ? "所有" : "任意")}
+                disabled={props.disabled}
+            />{" "}
+            黑洞 / 中子星的距离{" "}
             <ConditionTypeSelector
                 value={condition()}
                 onChange={setCondition}
@@ -432,16 +441,7 @@ const EditXDistance: Component<{
                 error={condition().value <= 0}
                 disabled={props.disabled}
             />{" "}
-            光年 远离{" "}
-            <Select
-                class={styles.selectAllOrAny}
-                value={!!props.value.all}
-                onChange={(all) => props.onChange({ ...props.value, all })}
-                options={[false, true]}
-                getLabel={(all) => (all ? "所有" : "任意")}
-                disabled={props.disabled}
-            />{" "}
-            黑洞 / 中子星{props.value.all ? "" : ""}。
+            光年
         </>
     )
 }
@@ -459,20 +459,7 @@ const EditSpectrDistance: Component<{
         props.onChange({ ...props.value, distanceCondition })
     return (
         <>
-            含有{" "}
-            <ConditionTypeSelector
-                value={countCondition()}
-                onChange={setCountCondition}
-                disabled={props.disabled}
-            />{" "}
-            <ConditionValueInput
-                class={styles.inputCount}
-                value={countCondition()}
-                onChange={setCountCondition}
-                emptyValue={-1}
-                error={countCondition().value <= 0}
-                disabled={props.disabled}
-            />{" "}
+            距离最近的{" "}
             <Select
                 class={styles.selectSpectr}
                 value={props.value.spectr}
@@ -483,7 +470,7 @@ const EditSpectrDistance: Component<{
                 getLabel={(spectr) => spectr}
                 disabled={props.disabled}
             />{" "}
-            型恒星距离{" "}
+            型恒星{" "}
             <ConditionTypeSelector
                 value={distanceCondition()}
                 onChange={setDistanceCondition}
@@ -497,7 +484,32 @@ const EditSpectrDistance: Component<{
                 error={distanceCondition().value <= 0}
                 disabled={props.disabled}
             />{" "}
-            光年。
+            光年，且{" "}
+            <Select
+                class={styles.selectSpectr}
+                value={props.value.spectr}
+                onChange={(spectr) =>
+                    props.onChange({ ...props.value, spectr })
+                }
+                options={spectrs}
+                getLabel={(spectr) => spectr}
+                disabled={props.disabled}
+            />{" "}
+            型恒星数量{" "}
+            <ConditionTypeSelector
+                value={countCondition()}
+                onChange={setCountCondition}
+                disabled={props.disabled}
+            />{" "}
+            <ConditionValueInput
+                class={styles.inputCount}
+                value={countCondition()}
+                onChange={setCountCondition}
+                emptyValue={-1}
+                error={countCondition().value <= 0}
+                disabled={props.disabled}
+            />
+            个
         </>
     )
 }
@@ -852,7 +864,7 @@ const ruleNames: Record<RuleType, string> = {
     [RuleType.StarType]: "恒星类型",
     [RuleType.BirthDistance]: "距离出生星系",
     [RuleType.XDistance]: "距离X型恒星",
-    [RuleType.SpectrDistance]: "距离其他恒星",
+    [RuleType.SpectrDistance]: "距离指定恒星",
     [RuleType.Luminosity]: "亮度",
     [RuleType.Spectr]: "光谱类型",
     [RuleType.DysonRadius]: "最大戴森球半径",
@@ -860,11 +872,11 @@ const ruleNames: Record<RuleType, string> = {
     [RuleType.SatelliteCount]: "卫星数量",
     [RuleType.TidalLockCount]: "潮汐锁定行星数量",
     [RuleType.ThemeId]: "行星主题",
-    [RuleType.GasCount]: "气态/冰巨行星数量",
+    [RuleType.GasCount]: "巨行星数量",
     [RuleType.OceanType]: "海洋",
     [RuleType.GasRate]: "气体产量",
     [RuleType.AverageVeinAmount]: "矿脉储量",
-    [RuleType.PlanetInDysonCount]: "戴森球内行星",
+    [RuleType.PlanetInDysonCount]: "戴森球内行星数量",
 }
 
 const rules: SimpleRule[] = [
